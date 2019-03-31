@@ -36,10 +36,18 @@ install:
 
 script: skip
 
+before_deploy:
+  - export ARTIFACTS_DIR=$TRAVIS_REPO_SLUG/TRAVIS_BRANCH/TRAVIS_BUILD_NUMBER
+  - mkdir -p $ARTIFACTS_DIR
+  - cp -r out_android $ARTIFACTS_DIR
+  - cp -r out/Release/lib.target $ARTIFACTS_DIR
+
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
   bucket: $S3_Bucket
   skip_cleanup: true
-  local_dir: out_android
+  local_dir: $ARTIFACTS_DIR
+  on:
+    all_branches: true
