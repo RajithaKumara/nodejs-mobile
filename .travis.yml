@@ -2,6 +2,12 @@ language: cpp
 cache: ccache
 os: linux
 
+env:
+  global:
+    - REPO_NAME="nodejs-mobile"
+    - ARTIFACTS_ROOT_DIR=$REPO_NAME
+    - ARTIFACTS_DIR=$ARTIFACTS_ROOT_DIR/$REPO_NAME/$TRAVIS_BRANCH/$TRAVIS_JOB_NUMBER
+
 addons:
   apt:
     sources:
@@ -12,9 +18,7 @@ addons:
 before_install:
   - curl https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip -o ndk.zip
   - unzip -qq ndk.zip -d $HOME
-  - ls $HOME
   - export ANDROID_NDK_HOME=$HOME/android-ndk-r18b
-  - ls $ANDROID_NDK_HOME
   - |
     case $ARCH in
       arm)
@@ -37,7 +41,6 @@ install:
 script: skip
 
 before_deploy:
-  - export ARTIFACTS_DIR=$TRAVIS_REPO_SLUG/TRAVIS_BRANCH/TRAVIS_BUILD_NUMBER
   - mkdir -p $ARTIFACTS_DIR
   - cp -r out_android $ARTIFACTS_DIR
   - cp -r out/Release/lib.target $ARTIFACTS_DIR
@@ -48,6 +51,6 @@ deploy:
   secret_access_key: $AWS_SECRET_KEY
   bucket: $S3_Bucket
   skip_cleanup: true
-  local_dir: $ARTIFACTS_DIR
+  local_dir: $ARTIFACTS_ROOT_DIR
   on:
     all_branches: true
