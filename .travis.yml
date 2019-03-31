@@ -11,7 +11,7 @@ addons:
 
 before_install:
   - curl https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip -o ndk.zip
-  - unzip ndk.zip -d $HOME
+  - unzip -qq ndk.zip -d $HOME
   - ls $HOME
   - export ANDROID_NDK_HOME=$HOME/android-ndk-r18b
   - ls $ANDROID_NDK_HOME
